@@ -1,0 +1,23 @@
+<?php
+require_once 'config.php';
+
+try {
+    // Requête pour lister les tables
+    $query = $pdo->query("SHOW TABLES");
+    $tables = $query->fetchAll(PDO::FETCH_COLUMN);
+
+    echo "<h2>📋 Tables dans la base de données :</h2><ul>";
+
+    if (empty($tables)) {
+        echo "<li>Aucune table trouvée.</li>";
+    } else {
+        foreach ($tables as $table) {
+            echo "<li>" . htmlspecialchars($table) . "</li>";
+        }
+    }
+
+    echo "</ul>";
+} catch (PDOException $e) {
+    echo "<p>❌ Erreur lors de la récupération des tables : " . $e->getMessage() . "</p>";
+}
+?>
