@@ -1,204 +1,163 @@
+# Préparer le contenu corrigé du fichier Espace-Admin.php avec l'intégration propre de config.php
+
+espace_admin_cleaned = """<?php
+require_once 'config.php';
+
+// Exemple : récupérer les admins (si nécessaire)
+$admin = $pdo->query('SELECT * FROM admin');
+?>
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Administrateur</title>
+    <link href="styles.css" rel="stylesheet">
     <link rel="stylesheet" media="screen and (min-width: 768px) and (max-width: 1025px)" href="styles-tablet.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <title>Validation des Avis de Covoiturage</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Roboto&family=Source+Sans+3&display=swap" rel="stylesheet">
 </head>
-
-
-<header>
-    <a href="US1 Accueil.html"> <img src="img\electric-vehicle_17165746.png" class="imglogo" alt="logo EcoRide" >
-    </a> 
-</header>
 <body>
-        
-    <style>
+    <nav class="nav | padding ">
+        <a href="US1 Accueil.html"><img src="img/electric-vehicle_17165746.png" class="imglogo" alt="logo EcoRide"></a>
+        <ul class="nav-links" id="nav-links">
+            <a href="US1 Accueil.html">Accueil</a>
+            <a href="Vue covoiturages.html">Covoiturages</a>
+            <a href="contact.html">Contact</a>
+            <a href="Création-compte.php"><button class="button">Connexion</button></a>
+        </ul>
+    </nav>
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-}
+    <header>
+        <div class="container03">
+            <h1>Bienvenue dans l'espace administrateur</h1>
+            <h1>Créer un compte employé</h1>
+            <form action="ajouter_employe.php" method="POST">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" required><br>
 
-h1 {
-    text-align: center;
-    color: #16890b;
-    top: 50px;
-}
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required><br>
 
-#avis-container {
-    position: relative;
-    justify-content: center;
-    max-width: 800px;
-    height: 500px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(106, 209, 92, 0.1);
-}
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required><br>
 
-.avis-item {
-    padding: 10px 0;
-    border-radius: 20px;
-}
-.avis-item small {
-    color: #666;
-}
-    </style>
-    <h1>Bienvenue dans l'Espace Employé</h1>
+                <button type="submit">Créer</button>
+            </form>
+        </div>
 
-    <div id="avis-container">
-        <form action="fetch_reviews.php" method="post"></form>
-    <h2>Validation des Avis de Covoiturage</h2>
-    <form action="process_review.php" method="post">
-        <label for="review_id">ID de l'avis :</label>
-        <input type="text" id="review_id" name="review_id" required><br><br>
-        
-        <label for="action">Action :</label>
-        <select id="action" name="action" required>
-            <option value="valider">Valider</option>
-            <option value="refuser">Refuser</option>
-        </select><br><br>
-        
-        <input type="submit" value="Soumettre">
-    </form>
+        <div class="container04">
+            <h2>Suspendre un compte utilisateur</h2>
+            <form action="suspend_user.php" method="post">
+                <label for="user_id">ID de l'utilisateur :</label>
+                <input type="text" id="user_id" name="user_id" required>
+                <button type="submit">Supprimer</button>
+            </form>
+        </div>
+    </header>
 
-
-
-<?php
-$host = "127.0.0.1"; 
-$user = "root"; 
-$password = ""; 
-$database = "ecoride";
-// Exemple de données d'avis de trajet
-$avis= [
-    ['id' => 11, 'description' => 'Trajet parfait, Jean est très agréable, très arrangeant et réactif. Un grand merci!'],
-    ['id' => 12, 'description' => 'Trajet très bien passé avec Jean. ponctuel et très bonne conduite! Je recommande!.']
-];
-
-// Vérification si un avis a été sélectionné
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_avis'])) {
-    $Idavis = $_POST['id_avis'];
-    $avisSelectionne = array_filter($avis, fn($avis) => $avis['id'] == $Idavis);
-    if (!empty($avisSelectionne)) {
-        $avisSelectionne = array_values($avisSelectionne)[0];
-        echo "<p>Avis sélectionné : {$avisSelectionne['description']}</p>";
-    } else {
-        echo "<p>Avis non trouvé.</p>";
-    }
-}
-?>
-
-
-    <h3>Sélectionnez un avis de trajet</h3>
-    <form action=" process_review.php" method="POST">
-        <?php foreach ($avis as $avis): ?>
-            <div>
-                <label>
-                    <input type="radio" name="id_avis" value="<?= $avis['id'] ?>">
-                    <?= htmlspecialchars($avis['description']) ?>
-                </label>
-            </div>
-        <?php endforeach; ?>
-        
-        <input type="submit" value="Sélectionner">
-        
-    </form>
-        
+    <div class="canva">
+        <h2>Nombre de covoiturages par jour</h2>
+        <canvas id="graphiqueCovoiturage"></canvas>
     </div>
-</body>
-</html>
 
+    <?php
+    // Requête SQL pour compter les covoiturages par jour
+    $sql = "SELECT date_depart, COUNT(*) as total FROM covoiturage GROUP BY date_depart ORDER BY date_depart";
+    $stmt = $pdo->query($sql);
+    $dates = [];
+    $totals = [];
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Visionner les covoiturages problématiques</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <h1>Liste des covoiturages problématiques</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>id covoiturage</th>
-                <th>pseudo chauffeur</th>
-                <th>email chauffeur</th>
-                <th>pseudo passager</th>
-                <th>email passager</th>
-                <th>date départ</th>
-                <th>date d'arrivée</th>
-                <th>descriptif du trajet</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Connexion à la base de données
-            $servername = "127.0.0.1";
-            $username = "root";
-            $password = "";
-            $dbname = "ecoride";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $dates[] = $row['date_depart'];
+        $totals[] = $row['total'];
+    }
+    ?>
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            // Vérifier la connexion
-            if ($conn->connect_error) {
-                die("Connexion échouée: " . $conn->connect_error);
-            }
-
-            // Requête pour obtenir les covoiturages problématiques
-            $sql = "SELECT id_covoiturage, pseudo chauffeur, email chauffeur, pseudo passager, email passager, date_départ, date_d'arrivée, descriptif du trajet FROM covoiturage WHERE descriptif du trajet IS NOT NULL";
-            $result = $conn->query($sql);
-
-            if ($result && $result->num_rows > 0) {
-                // Afficher les données de chaque ligne
-                while($row = $result->fetch_assoc()) {
-                    echo "<tr><td>" . $row["id_covoiturage"]. "</td><td>" . $row["pseudo chauffeur"]. "</td><td>" . $row["email chauffeur"]. "</td> <td>" . $row["pseudo passager"]. "</td> <td>" . $row["email passager"]. "</td> <td>" . $row["date départ"]. "</td> <td>" . $row["date d'arrivée"]. "</td> <td>" . $row["descriptif du trajet"]. "</td></tr>";
-                     echo "<div class='avis'>";
-        echo "<h3>" . htmlspecialchars($row["id_covoiturage" ]) . "</h3>";
-        echo "<p>" . htmlspecialchars($row["Pseudo chauffeur"]) . "</p>";
-        echo "<small>" . htmlspecialchars($row["Email Chauffeur"]) . "</small>";
-        echo "<p>" . htmlspecialchars($row["Pseudo Passager"]) . "</p>";
-        echo "<small>" . htmlspecialchars($row["Email Passager"]) . "</small>";
-        echo "<p>" . htmlspecialchars($row["date départ"]) . "</p>";
-        echo "<p>" . htmlspecialchars($row["Date d'arrivée"]) . "</p>";
-        echo "<p>" . htmlspecialchars($row["descriptif du trajet"]) . "</p>";
-        echo "<form action='process_review.php' method='post'>";
-        echo "<input type='hidden' name='review_id' value='" . htmlspecialchars($row["id_covoiturage"]) . "'>";
-        echo "<input type='submit' name='action' value='valider'>";
-        echo "<input type='submit' name='action' value='refuser'>";
-        echo "</form>";
-        echo "<p>" . htmlspecialchars($row["statut"]) . "</p>";
-        echo "</div>";
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('graphiqueCovoiturage').getContext('2d');
+        const graphique = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($dates); ?>,
+                datasets: [{
+                    label: 'Covoiturages par jour',
+                    data: <?php echo json_encode($totals); ?>,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre de covoiturages'
+                        }
+                    }
                 }
-            } else {
-                echo "<tr><td colspan='8'>Aucun covoiturage problématique trouvé</td></tr>";
             }
+        });
+    </script>
 
-            $conn->close();
-            ?>
-        </tbody>
-    </table>
+    <div class="canavas2">
+        <h3>Crédits de EcoRide</h3>
+        <canvas id="covoiturageChart"></canvas>
+    </div>
+    <script>
+        const labels = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+        const creditsParJour = [9, 10, 33, 11, 25, 6, 8];
+        const totalCredits = creditsParJour.map((sum => value => sum += value)(0));
+
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Crédits gagnés par jour",
+                    data: creditsParJour,
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0, 0, 255, 0.5)",
+                    type: "bar"
+                },
+                {
+                    label: "Total accumulé",
+                    data: totalCredits,
+                    borderColor: "green",
+                    backgroundColor: "rgba(0, 255, 0, 0.5)",
+                    type: "line"
+                }
+            ]
+        };
+
+        new Chart(document.getElementById("covoiturageChart"), {
+            type: "bar",
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+"""
+
+# Enregistrer dans un fichier PHP propre
+output_path = "/mnt/data/Espace-Admin_corrige.php"
+with open(output_path, "w", encoding="utf-8") as f:
+    f.write(espace_admin_cleaned)
+
+output_path
