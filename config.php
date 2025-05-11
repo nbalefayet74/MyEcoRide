@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db   = 'myecoride';       // 🔑 Nom de la base de données
-$user = 'root';            // 🔐 Utilisateur MySQL
-$pass = '';                // 🔐 Mot de passe (souvent vide en local)
+$db   = 'myecoride';
+$user = 'root';
+$pass = '';
 $charset = 'utf8mb4';
 
 try {
